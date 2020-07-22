@@ -57,7 +57,12 @@ class quantized_model_net(model_net):
         
     def save_model(self):
         
-         self.model.save('final_model_train1.hdf5')
+         self.q_aware_model.save('final_model_train1.hdf5') #Incase you dont want to quantize
+         converter = tf.lite.TFLiteConverter.from_keras_model( self.q_aware_model ) # Your model's name
+         converter.optimizations=[tf.lite.Optimize.DEFAULT]
+         model = converter.convert()
+         file = open( 'model.tflite' , 'wb' ) 
+         file.write( model )
 
 # %% [code]
 if __name__=="__main__":
